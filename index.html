@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Geolocation with Leaflet</title>
+    
+    <!-- Bao gồm CSS của Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Thêm một số CSS để định dạng bản đồ -->
+    <style>
+        #map {
+            height: 100vh; /* Bản đồ sẽ chiếm toàn bộ chiều cao trang */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Vùng chứa bản đồ -->
+    <div id="map"></div>
+
+    <!-- Bao gồm JavaScript của Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Script để hiển thị và cập nhật vị trí theo thời gian thực -->
+    <script>
+        // Khởi tạo bản đồ, đặt tâm mặc định ở vị trí bất kỳ
+        var map = L.map('map').setView([20.0, 105.0], 5);
+
+        // Thêm lớp gạch OpenStreetMap (bản đồ nền)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Tạo một biến để lưu giữ marker
+        var marker;
+
+        // Kiểm tra xem trình duyệt có hỗ trợ Geolocation API hay không
+        if (navigator.geolocation) {
+            // Sử dụng watchPosition để theo dõi vị trí liên tục
+            navigator.geolocation.watchPosition(
+                function (position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    // Nếu marker chưa tồn tại, tạo mới marker
+                    if (!marker) {
+                        marker = L.marker([lat, lon]).addTo(map)
+                            .bindPopup("You are here!").openPopup();
+                    } else {
+                        // Di chuyển marker đến vị trí mới
+                        marker.setLatLng([lat, lon]);
+                    }
+
+                    // Di chuyển tâm bản đồ đến vị trí hiện tại
+                    map.setView([lat, lon], 13);
+                },
+                function (error) {
+                    alert("Unable to retrieve your location. Error: " + error.message);
+                },
+                {
+                    enableHighAccuracy: true,  // Cố gắng lấy vị trí chính xác nhất
+                    maximumAge: 10000,  // Cho phép dữ liệu vị trí được lưu lại trong 10 giây
+                    timeout: 10000  // Thời gian chờ tối đa để lấy vị trí
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    </script>
+
+</body>
+</html>
