@@ -54,9 +54,8 @@
                         marker.setLatLng([lat, lon]);
                     }
 
-                    // Thay vì đặt lại mức zoom, chỉ di chuyển bản đồ theo vị trí mới
-                    var currentZoom = map.getZoom(); // Lấy mức zoom hiện tại
-                    map.setView([lat, lon], currentZoom); // Giữ mức zoom và di chuyển bản đồ
+                    // Sử dụng panTo thay vì setView để di chuyển bản đồ mà không thay đổi mức zoom
+                    map.panTo([lat, lon]);
                 },
                 function (error) {
                     alert("Unable to retrieve your location. Error: " + error.message);
