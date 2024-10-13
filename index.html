@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
     <!-- Script để hiển thị và cập nhật vị trí theo thời gian thực -->
     <script>
         // Khởi tạo bản đồ, đặt tâm mặc định ở vị trí bất kỳ
-        var map = L.map('map').setView([20.0, 105.0], 5);
+        var map = L.map('map').setView([20.0, 105.0], 13);  // Đặt mức zoom ban đầu
 
         // Thêm lớp gạch OpenStreetMap (bản đồ nền)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -54,8 +54,9 @@
                         marker.setLatLng([lat, lon]);
                     }
 
-                    // Di chuyển tâm bản đồ đến vị trí hiện tại
-                    map.setView([lat, lon], 13);
+                    // Thay vì đặt lại mức zoom, chỉ di chuyển bản đồ theo vị trí mới
+                    var currentZoom = map.getZoom(); // Lấy mức zoom hiện tại
+                    map.setView([lat, lon], currentZoom); // Giữ mức zoom và di chuyển bản đồ
                 },
                 function (error) {
                     alert("Unable to retrieve your location. Error: " + error.message);
